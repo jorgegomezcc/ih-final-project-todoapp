@@ -1,6 +1,6 @@
 <template>
-    <h1>Esta es la ventana de Login</h1>
     <div>
+        <h1>Esta es la ventana de Login</h1>
         <form @submit.prevent="signIn">
             <div>
                 <div>
@@ -34,27 +34,25 @@
     
     
     <script setup>
-
-        //imports to use in the script
         import { ref, reactive} from "vue";
-        import { store } from "../stores/users";
+        import { useUsersStore } from "../stores/users";
         import { useRouter } from "vue-router";
         
-        //Var to connect to the login form
+        // const var to connecto with the signin form
         const email = ref("");
         const password = ref("");
         const redirect = useRouter();
+        const store = useUsersStore();
     
-        //signin function to signin into app and connect to supabase
-        const signIn = async () => {                            // async function
-            try {                                               
-                await store.signIn(email, password);            //await funtion imported from store to get de email and password
-                redirect.push({ path: "/" });                   // if its fine, redirect to the home path
+        const signIn = async () => {                                             //arrow function for signin
+            try {
+                await store.signIn(email, password);                             //call the signin function from the user store
+                console.log(store.currentUser);
+                redirect.push({ path: "/" });                                  //routing to the home path 
             }
-            catch (error) {                                     
-                redirect.push({ path: "/auth/signup" });        //catching the error
+            catch (error) {                                                   //catching error
+                alert(error);       
             }
-    
         };
     </script>
     

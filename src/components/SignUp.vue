@@ -1,6 +1,6 @@
 <template>
-    <h1>Esta es la ventana de SignUp</h1>
     <div>
+        <h1>Esta es la ventana de SignUp</h1>
         <form @submit.prevent="signUp">
             <div>
                 <div>
@@ -44,21 +44,29 @@
     
     
     <script setup>
-    //import to use in the script
     import { ref, reactive} from "vue"
-    import { store } from "../stores/users"
+    import { useUsersStore } from "../stores/users"
+    import { useRouter } from "vue-router";
     
-    // var to connect to the signup form
+    // const var to connect with the signup form
     const email = ref("");
     const password = ref("");
     const confirmPassword = ref("");
+    const redirect = useRouter();
+    const store = useUsersStore();
     
-    //function to signup
-    const signUp = async () => {                            //async function to get the signup
-        if(password.value === confirmPassword.value)        //conditional to compare the password values
-        store.signUp(email, password);                      //keep the values and push into the store
-        else                                            
-        alert("boludooooo");                                //alert/catch error
+    const signUp = async () => {                                    //arrow function for login
+        if(password.value === confirmPassword.value)               //confirm the password values input field
+        try {
+            await store.signUp(email, password);                    //call the signin function to the user store
+            alert("Tus datos se guardaron correctamente. Por favor, chequea tu correo para continuar con el proceso de alta.");
+            redirect.push({ path: "/auth/login" });                 //routing to login once user have been registered
+        }
+        catch (error) {                                             //Catching the error
+            alert(error);
+        }
+        else
+        alert("Las contraseñas no coinciden, por favor, corrige el error e intenta nuevamente.");     //error message
     };
     
     </script>
